@@ -1,0 +1,26 @@
+version: '3'
+services:
+  bluecoding:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    command: python -m debugpy --listen 0.0.0.0:5678 manage.py runserver 0.0.0.0:8000
+    volumes:
+      - .:/app
+    env_file:
+      - .env.local
+    ports:
+      - 8000:8000
+      - 5678:5678
+    depends_on:
+      - postgres_db
+  postgres_db:
+    image: postgres:13.1-alpine
+    volumes:
+      - bluecoding_postgres_data:/var/lib/postgresql/data/
+    ports:
+      - 5432:5432
+    environment:
+      - POSTGRES_PASSWORD=bluecoding
+volumes:
+  bluecoding_postgres_data:
