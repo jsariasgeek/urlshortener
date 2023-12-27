@@ -17,7 +17,8 @@ The core of the URL shortening algorithm lies in the key generation process. For
 
 ## Example Usage (How to run the APP)
 ```
-docker-compose up
+./bin/up.sh
+./bin/sync_db.sh
 ```
 You should have a server running on http://localhost:8000
 

@@ -1,6 +1,9 @@
+import asyncio
 import requests
 from django.core.management.base import BaseCommand, CommandError   
 from urls.models import URL
+from asgiref.sync import sync_to_async
+import aiohttp
 
 
 def create_shorted_urls():
@@ -19,15 +22,22 @@ def create_shorted_urls():
     urls_to_delete.delete()
 
 
-def visit_shorted_urls():
-    urls = URL.objects.all()
-    for url in urls:
-        response = requests.get(url.shorted_url)
-        print(response.history[0])
+async def visit_shorted_url(url, session):
+    async with session.get(url.shorted_url) as response:
+        print(response.history[0] if response.history else response)
+
+async def get_urls():
+    return await sync_to_async(list)(URL.objects.all())
+
+async def visit_shorted_urls():
+    urls = await get_urls()
+    async with aiohttp.ClientSession() as session:
+        tasks = [asyncio.create_task(visit_shorted_url(url, session)) for url in urls]
+        await asyncio.gather(*tasks)
 
 class Command(BaseCommand):
     help = "Populate db with URLS"
 
     def handle(self, *args, **options):
         create_shorted_urls()
-        visit_shorted_urls()
+        asyncio.run(visit_shorted_urls())
