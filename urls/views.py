@@ -10,9 +10,12 @@ from urls.async_tasks import update_url_title
 from urls.models import URL
 
 # Create your views here.
-@require_http_methods(["POST"])
+@require_http_methods(["GET", "POST"])
 @csrf_exempt
 def short_url(request):
+    if request.method == "GET":
+        # return the template
+        return render(request, 'short_url.html')
     param_dict = json.loads(request.body)
     url = param_dict.get('url')
     if not url:
@@ -45,6 +48,12 @@ def redirect_url(request):
 @require_http_methods(["GET"])
 def top_100_most_accessed_urls(request):
     urls = URL.objects.order_by('-access_counter')[:100]
+    if request.GET.get('format') == 'html':
+        return render(request, 'top_100.html', {'urls': urls})
     return HttpResponse(json.dumps({
         "urls": [url.as_dict() for url in urls]
     }), content_type="application/json")
+
+
+def home(request):
+    return render(request, 'home.html')

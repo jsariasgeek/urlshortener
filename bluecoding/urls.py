@@ -17,10 +17,11 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, re_path, include
 from django.urls import re_path
-from urls.views import redirect_url
+from urls.views import redirect_url, home
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('urls/', include('urls.urls')),
-    re_path(r'^', view=redirect_url) # redirect all urls to the redirect_url view to check if it's a shorted url
+    path('', view=home, name='home'),
+    re_path(r'^', view=redirect_url), # redirect all urls to the redirect_url view to check if it's a shorted url
 ]

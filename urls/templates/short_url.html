@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>URL Shortener</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+            color: #333;
+        }
+
+        .container {
+            width: 80%;
+            margin: auto;
+            overflow: hidden;
+            padding: 20px;
+        }
+
+        .url-form, .short-url-display {
+            background-color: #ffffff;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .url-form input[type="text"], .url-form input[type="submit"] {
+            padding: 10px;
+            margin: 5px 0;
+            border-radius: 5px;
+            border: 1px solid #ddd;
+        }
+
+        .url-form input[type="submit"] {
+            background-color: #50b3a2;
+            color: white;
+            cursor: pointer;
+        }
+
+        .url-form input[type="submit"]:hover {
+            background-color: #429586;
+        }
+
+        .short-url-display {
+            display: none; /* Initially hidden */
+        }
+    </style>
+</head>
+<body>
+    {% include 'header.html' %}
+    <div class="container">
+        <h1>URL Shortener</h1>
+        <div class="url-form">
+            <form id="urlShortenerForm">
+                <input type="text" id="urlInput" placeholder="Enter URL to shorten" required>
+                <input type="submit" value="Shorten URL">
+            </form>
+        </div>
+        <div class="short-url-display" id="shortUrlDisplay">
+            <p>Shortened URL: <a id="shortenedUrl" href=""></a></p>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('urlShortenerForm').onsubmit = async (event) => {
+            event.preventDefault();
+            console.log('Form submitted!');
+            var inputUrl = document.getElementById('urlInput').value;
+            console.log('Input URL: ' + inputUrl);
+            const response = await fetch('/urls/short/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({url: 'https://' + inputUrl}),
+            })
+            const data = await response.json();
+            console.log('Response from server: ', data);
+            document.getElementById('shortUrlDisplay').style.display = 'block';
+            document.getElementById('shortenedUrl').innerHTML = data.shorted_url;
+
+            // var request = new XMLHttpRequest();
+            // request.open('POST', '/urls/short/', {url:'https://' + inputUrl});
+            // request.onload = function() {
+            //     if (request.status === 200) {
+            //         var data = JSON.parse(request.responseText);
+            //         document.getElementById('shortenedUrl').innerHTML = data.short_url;
+            //         document.getElementById('shortenedUrl').href = data.short_url;
+            //         document.getElementById('shortUrlDisplay').style.display = 'block';
+            //     }
+            // };
+        };
+    </script>
+</body>
+</html>

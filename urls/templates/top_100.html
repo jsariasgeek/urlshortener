@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Top URLs</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+            color: #333;
+        }
+
+        .container {
+            width: 80%;
+            margin: auto;
+            overflow: hidden;
+            padding: 20px;
+        }
+
+        .url-item {
+            background-color: #ffffff;
+            padding: 10px;
+            margin-bottom: 10px;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .url-item h2 {
+            font-size: 18px;
+            margin: 0 0 10px 0;
+        }
+
+        .url-item a {
+            text-decoration: none;
+            color: #1a0dab;
+        }
+
+        .url-item p {
+            margin: 5px 0;
+        }
+    </style>
+</head>
+<body>
+    {% include 'header.html' %}
+    <div class="container">
+        <h1>Top 100 Most Visited URLs</h1>
+       {% for url in urls %}
+        <div class="url-item">
+            <h2><a href=>{{url.url_title}} | Official site | {{ url.title }}</a></h2>
+            <p>Full URL: <a href="{{url.full_url}}">{{url.full_url}}</a></p>
+            <p>Short URL: <a href="{{url.shorted_url}}">{{ url.shorted_url}}</a></p>
+            <p>Visits: {{url.access_counter}}</p>
+        </div>
+       {% endfor %}
+    </div>
+</body>
+</html>

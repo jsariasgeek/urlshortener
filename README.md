@@ -17,8 +17,7 @@ The core of the URL shortening algorithm lies in the key generation process. For
 
 ## Example Usage (How to run the APP)
 ```
-./bin/up.sh
-./bin/sync_db.sh
-./bin/populate_db.sh
+./bin/startup.sh
 ```
+This command takes care of 1) Bring Containers Up 2) Sync DB 3)Populate DB
 You should have a server running on http://localhost:8000

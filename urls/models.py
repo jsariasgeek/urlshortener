@@ -16,6 +16,12 @@ class URL(models.Model):
         self.shorted_url = short_url
         self.key = key
 
+    def url_title(self):
+        """
+        Returns the full url without the protocol
+        """
+        return self.full_url.replace('https://', '').replace('http://', '').capitalize()
+
     def as_dict(self):
         return {
             "full_url": self.full_url,
