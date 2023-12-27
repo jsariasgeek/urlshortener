@@ -1,0 +1,1 @@
+docker-compose exec bluecoding python manage.py populate_db

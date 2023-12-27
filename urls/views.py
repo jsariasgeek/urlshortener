@@ -29,7 +29,7 @@ def short_url(request):
     return HttpResponse(json.dumps({
         "url": url,
         "shorted_url":url_instance.shorted_url,
-    }), content_type="application/json")
+    }), content_type="application/json", status=201)
 
 
 @require_http_methods(["GET"])
