@@ -19,6 +19,7 @@ The core of the URL shortening algorithm lies in the key generation process. For
 ```
 ./bin/up.sh
 ./bin/sync_db.sh
+./bin/populate_db.sh
 ```
 You should have a server running on http://localhost:8000
 

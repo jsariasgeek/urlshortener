@@ -5,21 +5,31 @@ from urls.models import URL
 from asgiref.sync import sync_to_async
 import aiohttp
 
+async def create_shorted_url(url, session):
+    """
+    Asynchronously create a shortened url
+    """
+    async with session.post('http://localhost:8000/urls/short/', json={"url": url}) as response:
+        print(await response.json())
 
-def create_shorted_urls():
+async def create_shorted_urls():
     """
-    Create 100 shorted urls
+    Asynchronously create 100 shortened urls
     """
-    with open('urls/websites.txt', 'r') as f:
-        websites = f.readlines()
-        for website in websites:
-            website = website.strip()
-            response = requests.post('http://localhost:8000/urls/short/', json={"url":website})
-            print(response.json())
-    
-    # delete urls with no title: sometimes those pages are not accesible
-    urls_to_delete = URL.objects.filter(title="")
-    urls_to_delete.delete()
+    async with aiohttp.ClientSession() as session:
+        with open('urls/websites.txt', 'r') as f:
+            websites = f.readlines()
+            # i want to create chunks of 10 websites and run an event loop for each chunk
+            # this is because my server can crash
+            chunks = [websites[x:x+20] for x in range(0, len(websites), 20)]
+            for chunk in chunks:
+                print('running chunk')
+                tasks = [asyncio.create_task(create_shorted_url(website.strip(), session)) for website in chunk]
+                await asyncio.gather(*tasks)
+
+
+    # Delete urls with no title: sometimes those pages are not accessible
+    await sync_to_async(URL.objects.filter(title="").delete)()
 
 
 async def visit_shorted_url(url, session):
@@ -39,5 +49,5 @@ class Command(BaseCommand):
     help = "Populate db with URLS"
 
     def handle(self, *args, **options):
-        create_shorted_urls()
+        asyncio.run(create_shorted_urls())
         asyncio.run(visit_shorted_urls())
