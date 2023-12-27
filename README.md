@@ -19,5 +19,5 @@ The core of the URL shortening algorithm lies in the key generation process. For
 ```
 ./bin/startup.sh
 ```
-This command takes care of 1) Bring Containers Up 2) Sync DB 3)Populate DB
+This command takes care of 1) Bring Containers Up 2) Sync DB 3)Populate DB. If it fails, give it a second try, (I should have put a waitfordb script)
 You should have a server running on http://localhost:8000
