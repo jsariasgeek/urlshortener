@@ -22,11 +22,3 @@ The core of the URL shortening algorithm lies in the key generation process. For
 ./bin/populate_db.sh
 ```
 You should have a server running on http://localhost:8000
-
-## Limitations and Improvements
-- This implementation uses an in-memory dictionary for storing URL mappings, which is not persistent. For production use, integrating a database is recommended.
-- The algorithm does not handle potential hash collisions or repeated URLs.
-- Scalability and performance optimizations may be necessary for handling a large number of URLs.
-
-## Conclusion
-This URL shortening algorithm provides a basic yet functional approach to shortening URLs in Python. It is suitable for small-scale applications and can be extended for more robust and scalable solutions.
