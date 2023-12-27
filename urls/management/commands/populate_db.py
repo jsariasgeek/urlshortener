@@ -12,7 +12,7 @@ async def create_shorted_url(url, session):
     async with session.post('http://localhost:8000/urls/short/', json={"url": url}) as response:
         print(await response.json())
 
-async def create_shorted_urls():
+async def create_shorted_urls(running_tests=False):
     """
     Asynchronously create 100 shortened urls
     """
@@ -21,7 +21,8 @@ async def create_shorted_urls():
             websites = f.readlines()
             # i want to create chunks of 10 websites and run an event loop for each chunk
             # this is because my server can crash
-            chunks = [websites[x:x+20] for x in range(0, len(websites), 20)]
+            chunk_size = 3 if running_tests else 20
+            chunks = [websites[x:x+chunk_size] for x in range(0, 3 if running_tests else len(websites), chunk_size)] # 3 for testing purposes
             for chunk in chunks:
                 print('running chunk')
                 tasks = [asyncio.create_task(create_shorted_url(website.strip(), session)) for website in chunk]
@@ -49,5 +50,6 @@ class Command(BaseCommand):
     help = "Populate db with URLS"
 
     def handle(self, *args, **options):
-        asyncio.run(create_shorted_urls())
+        running_tests = options.get('running_tests')
+        asyncio.run(create_shorted_urls(running_tests=running_tests))
         asyncio.run(visit_shorted_urls())

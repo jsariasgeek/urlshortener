@@ -14,6 +14,22 @@ services:
       - 5678:5678
     depends_on:
       - postgres_db
+  celery_worker:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    command: celery -A bluecoding worker -l info
+    volumes:
+      - .:/app
+    env_file:
+      - .env.local
+    depends_on:
+      - redis
+      - postgres_db
+  redis:
+    image: redis:6.0.9-alpine
+    ports:
+      - 6379:6379  
   postgres_db:
     image: postgres:13.1-alpine
     # volumes:

@@ -25,9 +25,8 @@ def short_url(request):
     # if url already exists, return the shorted url
     url_instance = URL.objects.get_or_create(full_url=url)[0]
 
-    # in a separate thread, update the title of the url
-    task_thread = threading.Thread(target=update_url_title, args=(url_instance,))
-    task_thread.start()
+    #  update the title of the url
+    update_url_title.delay(url_instance.key)
 
     return HttpResponse(json.dumps({
         "url": url,

@@ -80,6 +80,7 @@
             console.log('Response from server: ', data);
             document.getElementById('shortUrlDisplay').style.display = 'block';
             document.getElementById('shortenedUrl').innerHTML = data.shorted_url;
+            document.getElementById('shortenedUrl').href = data.shorted_url;
 
             // var request = new XMLHttpRequest();
             // request.open('POST', '/urls/short/', {url:'https://' + inputUrl});
